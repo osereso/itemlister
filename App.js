@@ -10,16 +10,22 @@ import {
 import Toolbar from './src/components/Toolbar/Toolbar';
 import AddButton from './src/components/AddButton/AddButton';
 
+import * as firebase from 'firebase';
+
 const styles = require('./src/components/style');
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
+const firebaseConfig = {
+    apiKey: "AIzaSyCRsl_Se5kegX4aYxheEqi3GY0Q20pRDig",
+    authDomain: "itemlister-a5bea.firebaseapp.com",
+    databaseURL: "https://itemlister-a5bea.firebaseio.com",
+    //projectId: "itemlister-a5bea",
+    storageBucket: "itemlister-a5bea.appspot.com"
+}
 
-export default class App extends Component {
+
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+
+export default class itemlister extends Component {
   constructor(){
     super();
     let ds = new ListView.DataSource({rowHasChanged:(r1, r2) => r1 !== r2});
@@ -27,23 +33,37 @@ export default class App extends Component {
       itemDataSource: ds
     }
 
+    this.itemsRef = this.getRef().child('items');
+
     this.renderRow = this.renderRow.bind(this);
     this.pressRow = this.pressRow.bind(this);
   }
 
+  getRef(){
+    return firebaseApp.database().ref();
+  }
+
   componentWillMount(){
-    this.getItems();
+    this.getItems(this.itemsRef);
   }
 
   componentDidMount(){
-    this.getItems();
+    this.getItems(this.itemsRef);
   }
 
-  getItems(){
-    let items = [{title:'Item One'},{title:'Item Two'}];
-
-    this.setState({
-      itemDataSource: this.state.itemDataSource.cloneWithRows(items)
+  getItems(itemsRef){
+    //let items = [{title:'Item One'},{title:'Item Two'}];
+    itemsRef.on('value',(snap) => {
+      let items = [];
+      snap.forEach((child) => {
+        items.push({
+          title: child.val().title,
+          _key: child.key
+        });
+      });
+      this.setState({
+        itemDataSource: this.state.itemDataSource.cloneWithRows(items)
+      });
     });
   }
 
