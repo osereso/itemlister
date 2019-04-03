@@ -48,7 +48,7 @@ export default class itemlister extends Component {
   }
 
   componentDidMount(){
-    this.getItems(this.itemsRef);
+    //this.getItems(this.itemsRef);
   }
 
   getItems(itemsRef){
@@ -83,6 +83,10 @@ export default class itemlister extends Component {
     );
   }
 
+  addItem(){
+
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -91,6 +95,7 @@ export default class itemlister extends Component {
           dataSource={this.state.itemDataSource}
           renderRow={this.renderRow}
         />
+        <AddButton onPress={this.addItem.bind(this)} title="Add Item"/>
       </View>
     );
   }
