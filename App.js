@@ -5,7 +5,9 @@ import {
   Text, 
   View,
   ListView,
-  TouchableHighlight} 
+  TouchableHighlight,
+  Modal,
+  TextInput} 
   from 'react-native';
 import Toolbar from './src/components/Toolbar/Toolbar';
 import AddButton from './src/components/AddButton/AddButton';
@@ -30,13 +32,17 @@ export default class itemlister extends Component {
     super();
     let ds = new ListView.DataSource({rowHasChanged:(r1, r2) => r1 !== r2});
     this.state = {
-      itemDataSource: ds
+      text: "",
+      itemDataSource: ds,
+      modalVisible: false
     }
-
     this.itemsRef = this.getRef().child('items');
-
     this.renderRow = this.renderRow.bind(this);
     this.pressRow = this.pressRow.bind(this);
+  }
+
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
   }
 
   getRef(){
@@ -68,7 +74,7 @@ export default class itemlister extends Component {
   }
 
   pressRow(item){
-    console.log(item);
+    this.itemsRef.child(item._key).remove();
   }
 
   renderRow(item){
@@ -84,12 +90,43 @@ export default class itemlister extends Component {
   }
 
   addItem(){
-
+    this.setModalVisible(true);
   }
 
   render() {
     return (
       <View style={styles.container}>
+      <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {}}>
+          <View style={{marginTop: 22}}>
+            <View>
+              <Toolbar title="Add Item"/>
+              <TextInput
+                value={this.state.text}
+                placeholder='Add Item'
+                onChangeText={(value) => this.setState({text:value})}
+              />
+
+              <TouchableHighlight
+                onPress={() => {
+                  this.itemsRef.push({title: this.state.text})
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Text>Save Item</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}>
+                <Text>Cancel</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+
         <Toolbar title="ItemLister" />
         <ListView
           dataSource={this.state.itemDataSource}
