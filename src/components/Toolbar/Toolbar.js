@@ -6,15 +6,11 @@ const styles = require('../../components/style');
 export default class Toolbar extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <StatusBar
-            backgroundColor='coral'
-            barStyle='light-content'
-        />
-        <View style={styles.navbar}>
-            <Text style={styles.navbarTitle}>{this.props.title}</Text>
-        </View>
-      </View>
+      <View style={styles.header}>
+            <Text style={styles.headerText}>
+              Item Lister
+            </Text>
+          </View>
     );
   }
 }

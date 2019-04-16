@@ -7,10 +7,14 @@ import {
   ListView,
   TouchableHighlight,
   Modal,
-  TextInput} 
+  TextInput,
+  ScrollView} 
   from 'react-native';
 import Toolbar from './src/components/Toolbar/Toolbar';
 import AddButton from './src/components/AddButton/AddButton';
+
+import Button from 'react-native-button';
+import InputScrollView from 'react-native-input-scroll-view';
 
 import * as firebase from 'firebase';
 
@@ -101,28 +105,51 @@ export default class itemlister extends Component {
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {}}>
-          <View style={{marginTop: 22}}>
+          <View >
             <View>
+            
               <Toolbar title="Add Item"/>
-              <TextInput
-                value={this.state.text}
-                placeholder='Add Item'
-                onChangeText={(value) => this.setState({text:value})}
-              />
+              <View style={{flex:1}}>
+                <TextInput style={styles.addItem}
+                  value={this.state.text}
+                  multiline = {true}
+                  numberOfLines = {4}
+                  editable = {true}
+                  placeholder='Add Item'
+                  underlineColorAndroid="transparent"
+                  autofocus={true}
+                  clearTextOnFocus={true}
+                  onChangeText={(value) => this.setState({text:value})}
+                />
+              
+              <View style={styles.modalFooter}>
+                <Button
+                  style={{ fontSize: 20, color: 'white', paddingBottom: 5 }}
+                  styleDisabled={{ color: 'white' }}
+                  containerStyle={{ padding: 10, height: 45, overflow: 'hidden', borderRadius: 4, backgroundColor: '#1DC4A6' }}
+                  disabledContainerStyle={{ backgroundColor: 'pink' }}
+                  onPress={() => {
+                    this.itemsRef.push({title: this.state.text})
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}
+                >
+                  Save item
+                </Button>
 
-              <TouchableHighlight
-                onPress={() => {
-                  this.itemsRef.push({title: this.state.text})
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text>Save Item</Text>
-              </TouchableHighlight>
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}>
-                <Text>Cancel</Text>
-              </TouchableHighlight>
+                <Button
+                  style={{ fontSize: 20, color: 'white' }}
+                  styleDisabled={{ color: 'white' }}
+                  containerStyle={{ padding: 10, height: 45, overflow: 'hidden', borderRadius: 4, backgroundColor: '#EA5745' }}
+                  disabledContainerStyle={{ backgroundColor: 'pink' }}
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}
+                >
+                  Cancel
+                </Button>
+                </View>
+              </View>
+
             </View>
           </View>
         </Modal>
