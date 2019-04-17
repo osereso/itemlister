@@ -39,26 +39,21 @@ module.exports = StyleSheet.create({
         textAlign: 'center',
     },
 
-    actionText: {
-      color: 'blue',
-      fontSize: 16,
-      textAlign: 'center',
-    },
-
     action: {
       backgroundColor: constants.actionColor,
       borderColor: 'transparent',
       borderWidth: 1,
       paddingLeft: 16,
+      paddingRight: 16,
       paddingTop: 14,
-      paddingBottom: 30,
+      paddingBottom: 18,
     },
 
-    addItem: {
+    addItemTextinput: {
       paddingTop: 30,
-      paddingLeft: 15,
+      paddingLeft: 16,
       paddingRight: 10,
-      paddingBottom: 30,
+      paddingBottom: 10,
       fontSize: 16,
     },
 
@@ -94,7 +89,10 @@ module.exports = StyleSheet.create({
       right: 0,
       // alignSelf:'flex-end',
       // zIndex: 0,
-      marginBottom: 36
+      paddingLeft: 16,
+      paddingRight: 16,
+      paddingTop: 14,
+      paddingBottom: 18,
     },
 
 

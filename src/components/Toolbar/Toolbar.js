@@ -8,7 +8,7 @@ export default class Toolbar extends Component {
     return (
       <View style={styles.header}>
             <Text style={styles.headerText}>
-              Item Lister
+              ToDo
             </Text>
           </View>
     );

@@ -1,21 +1,15 @@
 import React, {Component} from 'react';
-import {
-  Platform, 
-  StyleSheet, 
+import { 
   Text, 
   View,
   ListView,
   TouchableHighlight,
   Modal,
-  TextInput,
-  ScrollView} 
+  TextInput} 
   from 'react-native';
 import Toolbar from './src/components/Toolbar/Toolbar';
 import AddButton from './src/components/AddButton/AddButton';
-
 import Button from 'react-native-button';
-import InputScrollView from 'react-native-input-scroll-view';
-
 import * as firebase from 'firebase';
 
 const styles = require('./src/components/style');
@@ -27,7 +21,6 @@ const firebaseConfig = {
     //projectId: "itemlister-a5bea",
     storageBucket: "itemlister-a5bea.appspot.com"
 }
-
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
@@ -67,6 +60,7 @@ export default class itemlister extends Component {
       let items = [];
       snap.forEach((child) => {
         items.push({
+          // timestamp luxon vs iso
           title: child.val().title,
           _key: child.key
         });
@@ -106,11 +100,11 @@ export default class itemlister extends Component {
           visible={this.state.modalVisible}
           onRequestClose={() => {}}>
           <View >
-            <View>
+            <View >
             
               <Toolbar title="Add Item"/>
-              <View style={{flex:1}}>
-                <TextInput style={styles.addItem}
+              
+                <TextInput style={styles.addItemTextinput}
                   value={this.state.text}
                   multiline = {true}
                   numberOfLines = {4}
@@ -123,38 +117,41 @@ export default class itemlister extends Component {
                 />
               
               <View style={styles.modalFooter}>
+                <View style={{ paddingBottom: 5 }}>
                 <Button
-                  style={{ fontSize: 20, color: 'white', paddingBottom: 5 }}
-                  styleDisabled={{ color: 'white' }}
-                  containerStyle={{ padding: 10, height: 45, overflow: 'hidden', borderRadius: 4, backgroundColor: '#1DC4A6' }}
-                  disabledContainerStyle={{ backgroundColor: 'pink' }}
+                  style={{ fontSize: 20, color: 'white', }}
+                  styleDisabled={{ color: 'white', }}
+                  containerStyle={{ padding: 10, height: 45, overflow: 'hidden', borderRadius: 12, backgroundColor: '#1DC4A6', }}
+                  disabledContainerStyle={{ backgroundColor: 'pink', }}
                   onPress={() => {
                     this.itemsRef.push({title: this.state.text})
+                    this.setState({text: ''})
                     this.setModalVisible(!this.state.modalVisible);
                   }}
                 >
                   Save item
                 </Button>
+                </View>
 
                 <Button
                   style={{ fontSize: 20, color: 'white' }}
                   styleDisabled={{ color: 'white' }}
-                  containerStyle={{ padding: 10, height: 45, overflow: 'hidden', borderRadius: 4, backgroundColor: '#EA5745' }}
+                  containerStyle={{ padding: 10, height: 45, overflow: 'hidden', borderRadius: 12, backgroundColor: '#EA5745' }}
                   disabledContainerStyle={{ backgroundColor: 'pink' }}
                   onPress={() => {
+                    this.setState({text: ''})
                     this.setModalVisible(!this.state.modalVisible);
                   }}
                 >
                   Cancel
                 </Button>
                 </View>
-              </View>
-
+              
             </View>
           </View>
         </Modal>
 
-        <Toolbar title="ItemLister" />
+        <Toolbar title="Item lister" />
         <ListView
           dataSource={this.state.itemDataSource}
           renderRow={this.renderRow}
